@@ -6,6 +6,14 @@ target/
 .project
 .settings/
 .classpath
+*.class
+*.log
+/bin/
+/gen/
+/out/
+.gradle/
+
+
 /node_modules
 /.pnp
 .pnp.js
