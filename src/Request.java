@@ -5,7 +5,7 @@ class Request {
     private String requestType;
     private String uri;
     private String contentType;
-    private List<String> postDatas = new ArrayList<String>();
+    private final List<String> postDatas = new ArrayList<>();
     String postData = null;
 
     String getType(){ return requestType; }

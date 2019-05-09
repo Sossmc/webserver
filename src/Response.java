@@ -1,9 +1,8 @@
-import java.io.FileInputStream;
 import java.io.OutputStream;
 
 class Response {
 
-    private OutputStream output;
+    private final OutputStream output;
 
     Response(OutputStream output) {
         this.output = output;
@@ -11,24 +10,19 @@ class Response {
 
     void writeText(byte[] text, String status, String type) {
         try {
-            String line = "";
-            line = "HTTP/1.1 " + status + " OK\n";
+            String line = "HTTP/1.1 " + status + " OK\n";
             output.write(line.getBytes());
             switch (type) {
                 case "php":
                 case "html":
-                    type = "text/html";
-                    break;
+                    type = "text/html"; break;
                 case "js":
-                    type = "application/javascript";
-                    break;
+                    type = "application/javascript"; break;
                 case "css":
-                    type = "text/css";
-                    break;
+                    type = "text/css"; break;
                 case "jpeg":
                 case "jpg":
-                    type = "image/jpeg";
-                    break;
+                    type = "image/jpeg"; break;
                 default:
                     type = "text/plain";
             }
@@ -38,6 +32,6 @@ class Response {
             if(text != null) output.write(text);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally{ ;}
+        }
     }
 }

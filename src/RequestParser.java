@@ -16,15 +16,15 @@ class RequestParser {
         String uri = parseUri(requestMessage);
         request.setUri(uri);
         String contentType = "";
-        String [] contentTypeArray = uri.split("\\.");
-        if(uri.indexOf('.') != -1) contentType = contentTypeArray[contentTypeArray.length-1];
+        String [] contentTypeArray = uri != null ? uri.split("\\.") : new String[0];
+        if(uri == null || uri.indexOf('.') != -1) contentType = contentTypeArray[contentTypeArray.length-1];
         request.setContentType(contentType);
         return request;
     }
 
     private String readRequestMessage(InputStream input) {
-        StringBuffer requestMessage = new StringBuffer();
-        int readLength = 0;
+        StringBuilder requestMessage = new StringBuilder();
+        int readLength;
         byte[] buffer = new byte[1024];
         try {
             readLength = input.read(buffer);
@@ -39,8 +39,7 @@ class RequestParser {
     }
 
     private String parseType(String requestString) {
-        int index = 0;
-        index = requestString.indexOf(' ');
+        int index = requestString.indexOf(' ');
         if (index != -1) {
             return requestString.substring(0, index);
         }
@@ -64,8 +63,8 @@ class RequestParser {
 
         if(requestArray.length >= 2){
             String [] parArray = requestArray[1].split("&");
-            for(int i = 0; i < parArray.length; i++){
-                request.addPostDatas(parArray[i]);
+            for (String s : parArray) {
+                request.addPostDatas(s);
             }
             index1 = requestArray[1].indexOf('=');
             if(index1 != -1){
