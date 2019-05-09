@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,15 +9,16 @@ class Response {
 
     private static final String phpPath = "C:\\Users\\sossm\\scoop\\shims\\php.exe";
     private static final String rootPath = "./web";
-    private final OutputStream output;
-    Response(OutputStream output) {
-        this.output = output;
-    }
+    private Socket socket;
+
     /**
      * 根据请求类型及URI等请求信息，找到并执行对应的控制器方法后返回
      * 此处直接返回一个控制器，模拟查找和执行控制器方法的过程
      */
-    void execController(Request request) {
+    Response(Socket socket)throws IOException{
+        System.out.println("Connected from Port " + socket.getPort());
+        this.socket = socket;
+        Request request = new Request(socket.getInputStream());
         if(request.postData != null || request.getContentType().equals("php")){
             writeText(postToPHP(request), "200", request.getContentType());//运行php程序返回
             return;
@@ -67,6 +69,7 @@ class Response {
         }
         try{
             Process p = new ProcessBuilder(phpPath,"-B",phpCommands.toString(),"-F",rootPath + request.getUri()).start();
+            System.out.println(phpCommands.toString());
             OutputStream out = p.getOutputStream();
             OutputStreamWriter writer = new OutputStreamWriter(out);
             writer.write("\r\n");
@@ -85,6 +88,7 @@ class Response {
 
     private void writeText(byte[] text, String status, String type) {
         try {
+            OutputStream output = socket.getOutputStream();
             String line = "HTTP/1.1 " + status + " OK\n";
             output.write(line.getBytes());
             switch (type) {

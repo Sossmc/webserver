@@ -19,24 +19,21 @@ class Request {
     List<String> getPostDatas(){ return postDatas; }
     private void addPostDatas(String postData){ if(postData != null) this.postDatas.add(postData); }
 
-    public Request parse(InputStream inputStream) {
-        Request request = new Request();
-        // 读取请求信息
+    Request(InputStream inputStream) {
         String requestMessage = readRequestMessage(inputStream);
 //        System.out.println(requestMessage);
         // 解析请求方式
         String type = parseType(requestMessage);
-        request.setContentType(type);
+        setContentType(type);
         if(Objects.equals(type,"POST"))
-            request.postData = parsePostBody(requestMessage, request);
+            postData = parsePostBody(requestMessage);
         // 解析请求类型
         String uri = parseUri(requestMessage);
-        request.setUri(uri);
+        setUri(uri);
         String contentType = "";
         String [] contentTypeArray = uri != null ? uri.split("\\.") : new String[0];
         if(uri == null || uri.indexOf('.') != -1) contentType = contentTypeArray[contentTypeArray.length-1];
-        request.setContentType(contentType);
-        return request;
+        setContentType(contentType);
     }
 
     private String readRequestMessage(InputStream input) {
@@ -74,14 +71,14 @@ class Request {
         return null;
     }
 
-    private String parsePostBody(String requestString, Request request) {
+    private String parsePostBody(String requestString) {
         int index1, index2;
         String [] requestArray = requestString.split("\r\n\r\n");
 
         if(requestArray.length >= 2){
             String [] parArray = requestArray[1].split("&");
             for (String s : parArray) {
-                request.addPostDatas(s);
+                addPostDatas(s);
             }
             index1 = requestArray[1].indexOf('=');
             if(index1 != -1){

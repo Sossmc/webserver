@@ -29,12 +29,7 @@ public class Server {
                 final Socket socket = serverSocket.accept();    //listening to the port
                 new Thread(() -> {
                     try{
-                        InputStream inputStream = socket.getInputStream();
-                        OutputStream outputStream = socket.getOutputStream();
-                        System.out.println("Connected from Port " + socket.getPort());
-                        /* 读取请求信息内容 */
-                        Request request = new Request().parse(inputStream);
-                        new Response(outputStream).execController(request);
+                        new Response(socket);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -45,7 +40,7 @@ public class Server {
                             e.printStackTrace();
                         }
                     }
-                }).start();      //new a thread for the connection
+                }).start();
             }
         }
     }
