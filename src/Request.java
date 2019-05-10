@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Objects;
 
 class Request {
-    private String requestType;
+    private String method;
     private String uri;
     private String contentType;
     private final List<String> postDatas = new ArrayList<>();
-    String postData = null;
+    String postResponse = null;
 
-    String getType(){ return requestType; }
-    void setRequestType(String requestType){ this.requestType = requestType; }
+    //
+    String getType(){ return method; }
+    void setMethod(String method){ this.method = method; }
     String getUri(){ return uri; }
     private void setUri(String uri){ this.uri = uri; }
     String getContentType(){ return contentType; }
@@ -21,16 +22,15 @@ class Request {
 
     Request(InputStream inputStream) {
         String requestMessage = readRequestMessage(inputStream);
-//        System.out.println(requestMessage);
-        // 解析请求方式
+        // 解析 Method
         String type = parseType(requestMessage);
         setContentType(type);
-        if(Objects.equals(type,"POST"))
-            postData = parsePostBody(requestMessage);
-        // 解析请求类型
+        if(Objects.equals(type,"POST")) postResponse = parsePostBody(requestMessage);
+        // 解析 Uri
         String uri = parseUri(requestMessage);
         setUri(uri);
         String contentType = "";
+        // 解析文件类型
         String [] contentTypeArray = uri != null ? uri.split("\\.") : new String[0];
         if(uri == null || uri.indexOf('.') != -1) contentType = contentTypeArray[contentTypeArray.length-1];
         setContentType(contentType);

@@ -7,7 +7,7 @@ import java.io.OutputStream;
 public class Server {
 
     public static void main(String[] args){
-        int TCP_PORT = 80;
+        int TCP_PORT = 4206;
         System.out.println("Starting Server...\r\nListening On Port: " + TCP_PORT);
         try {
             new Server(TCP_PORT);
@@ -20,7 +20,7 @@ public class Server {
         ServerSocket serverSocket = null;
         try{
             serverSocket = new ServerSocket(TCP_PORT);
-            System.out.println("http://127.0.0.1:80/web/index.html");
+            System.out.println("http://127.0.0.1:4206/web/index.html");
         } catch (IOException e){
             e.printStackTrace();
         } finally {

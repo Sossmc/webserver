@@ -12,7 +12,7 @@ target/
 /gen/
 /out/
 .gradle/
-
+META-INF/
 
 /node_modules
 /.pnp
